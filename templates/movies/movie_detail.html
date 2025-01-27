@@ -344,20 +344,26 @@
                                 <li style="list-style: none"><span><b>Слоган:</b> {{ movie.tagline }}</span>
                                 </li>
                                 <li style="list-style: none">
-
-                                <span><b>Режиссер:</b>
-                                    {% for director in movie.directors.all %}
-                                        {{ movie.director.name }}
-                                    {% endfor %}
-                                </span></li>
+                                    <span><b>Режиссер:</b>
+                                        {% for director in movie.directors.all %}
+                                            {{ director.name }}
+                                            <!--чтоб запятую выводить-->
+                                            {% if director != movie.directors.last %},{% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </li>
                                 <li style="list-style: none"><span><b>Актеры:</b>
                                     {% for actor in movie.actors.all %}
-                                        {{ movie.actor.name }}
+                                        {{ actor.name }}
+                                        <!--чтоб запятую выводить-->
+                                        {% if actor != movie.actors.last %},{% endif %}
                                     {% endfor %}
                                 </span></li>
                                 <li style="list-style: none"><span><b>Жанр:</b>
                                     {% for genre in movie.genres.all %}
-                                        {{ movie.genre.name }}
+                                        {{ genre.name }}
+                                        <!--чтоб запятую выводить-->
+                                        {% if genre != movie.genres.last %},{% endif %}
                                     {% endfor %}
                                 </span>
                                 </li>
