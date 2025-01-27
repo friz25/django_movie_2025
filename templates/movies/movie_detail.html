@@ -117,9 +117,9 @@
             <h3 class="shop-sing editContent" style="outline: none; cursor: inherit;">
                 О фильме {{ movie.title }}</h3>
             <p>
-                <img src="{% static '/images/about.jpg' %}" class="img-fluid" alt="">
-                <img src="{% static '/images/admin.jpg' %}" class="img-fluid" alt="">
-                <img src="{% static '/images/d1.jpg' %}" class="img-fluid" alt="">
+                {% for image in movie.movieshots_set.all %}
+                    <img src="{{ image.image.url }}" class="img-movie-shots" alt="{{ image.description }}">
+                {% endfor %}
             </p>
             <p class="editContent" style="outline: none; cursor: inherit;">
                 {{ movie.description }}
