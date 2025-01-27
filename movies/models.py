@@ -84,6 +84,10 @@ class Movie(models.Model):
     def get_absolute_url(self):
         return reverse("movie_detail", kwargs={"slug": self.url})
 
+    """возвращает (только) родительские отзывы к фильму"""
+    def get_review(self):
+        return self.reviews_set.filter(parent__isnull=True)
+
     """то как таблица будет 'написана' в Админке"""
     class Meta:
         verbose_name = "Фильм"

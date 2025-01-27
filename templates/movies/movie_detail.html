@@ -180,7 +180,7 @@
                 <!--  //contact form grid ends here -->
             </div>
 
-            {% for review in movie.reviews_set.all %}
+            {% for review in movie.get_review %}
 
             <div class="media py-5">
                 <img src="{% static '/images/te2.jpg' %}" class="mr-3 img-fluid" alt="image">
@@ -193,24 +193,24 @@
                     </p>
                     <a href="#formReview" onclick="addReview('{{ review.name }}', '{{ review.id }}')">Ответить</a>
 
-<!--                    <div class="media mt-5 editContent">-->
-<!--                        <a class="pr-3" href="#">-->
-<!--                            <img src="{% static '/images/te1.jpg' %}" class="img-fluid "-->
-<!--                                 alt="image">-->
-<!--                        </a>-->
-<!--                        <div class="media-body">-->
-<!--                            <h5 class="mt-0 editContent">-->
-<!--                                Leia Organa-->
-<!--                            </h5>-->
-<!--                            <p class="mt-2 editContent">-->
-<!--                                Cras sit amet-->
-<!--                                nibh libero, in gravida nulla. Nulla vel metus-->
-<!--                                scelerisque ante sollicitudin. Cras purus odio,-->
-<!--                                vestibulum in vulputate at, tempus viverra turpis. Fusce-->
-<!--                                condimentum nunc ac nisi vulputate fringilla..-->
-<!--                            </p>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    {% for rew in review.reviews_set.all %}
+
+                    <div class="media mt-5 editContent">
+                        <a class="pr-3" href="#">
+                            <img src="{% static '/images/te1.jpg' %}" class="img-fluid "
+                                 alt="image">
+                        </a>
+                        <div class="media-body">
+                            <h5 class="mt-0 editContent">
+                                {{ rew.name }}
+                            </h5>
+                            <p class="mt-2 editContent">
+                                {{ rew.text }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
                 </div>
             </div>
             <script>
