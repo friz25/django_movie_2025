@@ -80,6 +80,7 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
+    """возвращает абсолютный url // напр site.com/terminator/"""
     def get_absolute_url(self):
         return reverse("movie_detail", kwargs={"slug": self.url})
 
