@@ -5,6 +5,7 @@ from .models import Category, Genre, Movie, \
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    """Категори"""
     list_display = ("id", "name", "url")
     list_display_links = ("name",)  # будет ссылкой (открытия записи)
 
@@ -17,6 +18,7 @@ class ReviewInLine(admin.TabularInline):
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
+    """Фильмы"""
     list_display = ('title', 'category', 'url', 'draft')
     list_filter = ('category', 'year')  # фильтр панеь (справа)
     search_fields = ('title', 'category__name')  # строка поиска
@@ -50,12 +52,28 @@ class MovieAdmin(admin.ModelAdmin):
 
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):
+    """Отзывы"""
     list_display = ("name", 'email', 'parent', 'movie', 'id')
     readonly_fields = ("name", "email")  # ток чтение / нельзя изменить (из админки)
 
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    """Жанры"""
+    list_display = ("name", 'url')
 
-admin.site.register(Genre)
-admin.site.register(MovieShots)
-admin.site.register(Actor)
-admin.site.register(Rating)
+@admin.register(Actor)
+class ActorAdmin(admin.ModelAdmin):
+    """Актёры"""
+    list_display = ("name", 'age')
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    """Рейтинг"""
+    list_display = ("star", 'ip')
+
+@admin.register(MovieShots)
+class MovieShotsAdmin(admin.ModelAdmin):
+    """Кадры из фильма"""
+    list_display = ("title", 'movie')
+
 admin.site.register(RatingStar)
