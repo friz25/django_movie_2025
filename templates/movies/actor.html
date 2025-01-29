@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {{ movie.title }}
+    {{ actor.name }}
 {% endblock title %}
 
 {% block container %}
@@ -17,7 +17,7 @@
     <div class="left-ads-display col-lg-8">
         <div class="row">
             <div class="desc1-left col-md-6">
-                <img src="{{ movie.poster.url }}" class="img-fluid" alt="">
+                <img src="{{ actor.image.url }}" class="img-fluid" alt="">
             </div>
             <div class="desc1-right col-md-6 pl-lg-4">
                 <h3 class="editContent">
@@ -25,21 +25,21 @@
                 </h3>
                 <!--                            <h5 class="editContent">Terminator: Dark Fate</h5>-->
                 <ul>
-                    <li><span><b>Дата рождения:</b> {{ movie.year }}</span></li>
+                    <li><span><b>Возраст:</b> {{ actor.age }} лет</span></li>
                     <li>
                         <span><b>Режиссер:</b>
-                            {% for director in movie.directors.all %}
-                                {{ director.name }}
+                            {% for movie in actor.film_director.all %}
+                                {{ movie.title }}
                             <!--чтоб запятую выводить-->
-                                {% if director != movie.directors.last %},{% endif %}
+                                {% if movie != actor.film_director.last %},{% endif %}
                             {% endfor %}
                         </span>
                     </li>
                     <li><span><b>Актер:</b>
-                        {% for actor in movie.actors.all %}
-                            {{ actor.name }}
+                        {% for movie in actor.film_actor.all %}
+                            {{ movie.title }}
                         <!--чтоб запятую выводить-->
-                            {% if actor != movie.actors.last %},{% endif %}
+                            {% if actor != movie.film_actor.last %},{% endif %}
                         {% endfor %}
                     </span></li>
                 </ul>
@@ -47,15 +47,15 @@
         </div>
         <div class="row sub-para-w3layouts mt-5">
 
-            <h3 class="shop-sing editContent" style="outline: none; cursor: inherit;">
-                О фильме {{ movie.title }}</h3>
-            <p>
-                {% for image in movie.movieshots_set.all %}
-                    <img src="{{ image.image.url }}" class="img-movie-shots" alt="{{ image.description }}">
-                {% endfor %}
-            </p>
+            <h3 class="shop-sing editContent">
+                О фильме {{ actor.name }}</h3>
+<!--            <p>-->
+<!--                {% for image in movie.movieshots_set.all %}-->
+<!--                    <img src="{{ image.image.url }}" class="img-movie-shots" alt="{{ image.description }}">-->
+<!--                {% endfor %}-->
+<!--            </p>-->
             <p class="editContent" style="outline: none; cursor: inherit;">
-                {{ movie.description|safe }}
+                {{ actor.description|safe }}
             </p>
         </div>
         <hr>
