@@ -17,6 +17,15 @@ class ReviewInLine(admin.TabularInline):
     extra = 1
     readonly_fields = ("name", "email")  # ток чтение / нельзя изменить (из админки)
 
+class MovieShotsInLine(admin.TabularInline):
+    model = MovieShots
+    extra = 1
+    readonly_fields = ('get_image',)
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="140" height="100"')
+
+    get_image.short_description = "Изображение"
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
@@ -24,17 +33,18 @@ class MovieAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'url', 'draft')
     list_filter = ('category', 'year')  # фильтр панеь (справа)
     search_fields = ('title', 'category__name')  # строка поиска
-    inlines = [ReviewInLine]
+    inlines = [MovieShotsInLine, ReviewInLine]
     save_on_top = True  # копия меню "сохранинь" (сверху)
     save_as = True  # можно создать новый фильм "редактируя прошлый"
     list_editable = ("draft",)  # из списка/каталога менять прям
+    readonly_fields = ('get_image',)
     # fields = (('actors', 'directors', 'genres'), )
     fieldsets = (
         (None, {
             "fields": (('title', 'tagline'),)
         }),
         (None, {
-            "fields": (('description', 'poster'),)
+            "fields": (('description', ('poster', 'get_image'),))
         }),
         (None, {
             "fields": (('year', 'world_premiere', 'country'),)
@@ -51,6 +61,10 @@ class MovieAdmin(admin.ModelAdmin):
         }),
     )  # чтоб поля в одну строку
 
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.poster.url} width="100" height="140"')
+
+    get_image.short_description = 'Постер'
 
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):
@@ -82,6 +96,15 @@ class RatingAdmin(admin.ModelAdmin):
 @admin.register(MovieShots)
 class MovieShotsAdmin(admin.ModelAdmin):
     """Кадры из фильма"""
-    list_display = ("title", 'movie')
+    list_display = ("title", 'movie', 'get_image')
+    readonly_fields = ('get_image',)
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="50" height="60"')
+
+    get_image.short_description = "Изображение"
 
 admin.site.register(RatingStar)
+
+admin.site.site_title = "Django Movies"
+admin.site.site_header = "Django Movies"
