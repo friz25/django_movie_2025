@@ -46,9 +46,11 @@ class MovieAdmin(admin.ModelAdmin):
     save_on_top = True  # копия меню "сохранинь" (сверху)
     save_as = True  # можно создать новый фильм "редактируя прошлый"
     list_editable = ("draft",)  # из списка/каталога менять прям
+    actions = ['publish', 'unpublish']
     form = MovieAdminForm
     readonly_fields = ('get_image',)
     # fields = (('actors', 'directors', 'genres'), )
+    # чтоб поля в одну строку
     fieldsets = (
         (None, {
             "fields": (('title', 'tagline'),)
@@ -69,10 +71,34 @@ class MovieAdmin(admin.ModelAdmin):
         ("Options", {
             "fields": (('url', 'draft'),)
         }),
-    )  # чтоб поля в одну строку
+    )
 
     def get_image(self, obj):
         return mark_safe(f'<img src={obj.poster.url} width="100" height="140"')
+
+    def unpublish(self, request, queryset):
+        """Снять с публикации"""
+        row_update = queryset.update(draft=True)
+        if row_update == 1:
+            message_bit = '1 запись была обновлена'
+        else:
+            message_bit = f'{row_update} записей были обновлены'
+        self.message_user(request, f'{message_bit}')
+
+    def publish(self, request, queryset):
+        """Опубликовать"""
+        row_update = queryset.update(draft=False)
+        if row_update == 1:
+            message_bit = '1 запись была обновлена'
+        else:
+            message_bit = f'{row_update} записей были обновлены'
+        self.message_user(request, f'{message_bit}')
+
+    publish.short_description = "Опубликовать"
+    publish.allowed_permissions = ('change',)
+
+    unpublish.short_description = "Снять с публикации"
+    unpublish.allowed_permissions = ('change',)
 
     get_image.short_description = 'Постер'
 
