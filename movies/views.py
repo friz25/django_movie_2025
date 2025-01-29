@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 
-from .models import Movie
+from .models import Actor, Movie
 from .forms import ReviewForm
 
 # Старый вид/класс / записан через View()
@@ -54,3 +54,9 @@ class AddReview(View):
                 form.movie = movie
                 form.save() # записываем (данные из формы) в БД
             return redirect(movie.get_absolute_url()) #напр на эту же / обновляет страницу
+
+class ActorView(DetailView):
+    """Вывод информации о актёре"""
+    model = Actor
+    template_name = 'movies/actor.html'
+    slug_field = "name"
