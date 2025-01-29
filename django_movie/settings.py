@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'ckeditor',
+    'ckeditor_uploader', # чтоб (через ckeditor) загружать img'ы
     'movies',
 
 ]
@@ -123,8 +125,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_DIR = MEDIA_ROOT = BASE_DIR/'static'
+STATIC_DIR = BASE_DIR/'static'
 STATICFILES_DIRS = [STATIC_DIR]
+# STATIC_ROOT = BASE_DIR/'static'
 
 MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -134,3 +137,6 @@ MEDIA_ROOT = BASE_DIR/'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#-----------------
+CKEDITOR_UPLOAD_PATH = "uploads/" #то куда будут загружены изображения (от ckeditor)
