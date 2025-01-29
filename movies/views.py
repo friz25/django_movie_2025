@@ -2,8 +2,18 @@ from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 
-from .models import Actor, Movie
+from .models import Actor, Movie, Genre
 from .forms import ReviewForm
+
+
+class GenreYear:
+    """Жанры и года выхода фильмов"""
+    def get_genres(self):
+        return Genre.objects.all()
+
+    def get_years(self):
+        return Movie.objects.filter(draft=False).values("year")
+
 
 # Старый вид/класс / записан через View()
 # class MoviesView(View):
@@ -12,7 +22,7 @@ from .forms import ReviewForm
 #         movies = Movie.objects.all()
 #         return render(request, "movies/movies.html", {"movie_list": movies})
 
-class MoviesView(ListView):
+class MoviesView(GenreYear, ListView):
     """Список фильмов"""
     model = Movie
     queryset = Movie.objects.filter(draft=False) #вывести все кроме "черновиков"
@@ -25,7 +35,7 @@ class MoviesView(ListView):
 #         movie = Movie.objects.get(url=slug)
 #         return render(request, 'movies/movie_detail.html', {"movie": movie})
 
-class MovieDetailView(DetailView):
+class MovieDetailView(GenreYear, DetailView):
     """Полное описание фильма"""
     model = Movie
     slug_field = 'url'
@@ -55,7 +65,7 @@ class AddReview(View):
                 form.save() # записываем (данные из формы) в БД
             return redirect(movie.get_absolute_url()) #напр на эту же / обновляет страницу
 
-class ActorView(DetailView):
+class ActorView(GenreYear, DetailView):
     """Вывод информации о актёре"""
     model = Actor
     template_name = 'movies/actor.html'
