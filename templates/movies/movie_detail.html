@@ -33,7 +33,8 @@
                     <li style="list-style: none">
                         <span><b>Режиссер:</b>
                             {% for director in movie.directors.all %}
-                                <a href="{% url 'actor_detail' director.name %}">
+<!--                            <a href="{% url 'actor_detail' director.name %}">-->
+                                <a href="{{ director.get_absolute_url }}">
                                     {{ director.name }}
                                 </a>
                             <!--чтоб запятую выводить-->
@@ -43,7 +44,10 @@
                     </li>
                     <li style="list-style: none"><span><b>Актеры:</b>
                         {% for actor in movie.actors.all %}
-                            {{ actor.name }}
+<!--                        <a href="{% url 'actor_detail' actor.name %}">-->
+                            <a href="{{ actor.get_absolute_url }}">
+                                {{ actor.name }}
+                            </a>
                         <!--чтоб запятую выводить-->
                             {% if actor != movie.actors.last %},{% endif %}
                         {% endfor %}

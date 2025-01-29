@@ -31,6 +31,10 @@ class Actor(models.Model):
     def __str__(self):
         return self.name
 
+    """возвращает абсолютный url // напр site.com/terminator/"""
+    def get_absolute_url(self):
+        return reverse("actor_detail", kwargs={"slug": self.name})
+
     """то как таблица будет 'написана' в Админке"""
     class Meta:
         verbose_name = "Актёра и режиссёра"
