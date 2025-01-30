@@ -29,6 +29,7 @@ class MoviesView(GenreYear, ListView):
     model = Movie
     queryset = Movie.objects.filter(draft=False) #вывести все кроме "черновиков"
     # template_name = "movies/movies.html"
+    paginate_by = 2 # (пагинация) какое кол эл выводить на страницу
 
 
 # class MovieDetailView(View):
