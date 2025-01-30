@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+
 
     'ckeditor',
     'ckeditor_uploader', # чтоб (через ckeditor) загружать img'ы
@@ -54,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
 ]
 
@@ -214,3 +218,5 @@ RECAPTCHA_PUBLIC_KEY = "6LfEKsgqAAAAAJVOimW8Dbi8fKHbl4Ru8rmXScpV"
 RECAPTCHA_PRIVATE_KEY = "6LfEKsgqAAAAAM1V6SDHJnGzag1FrNRtnpGQj5hc"
 RECAPTCHA_DEFAULT_ACTION = "generic"
 RECAPTCHA_SCORE_THRESHOLD = 0.5
+
+SITE_ID = 1
