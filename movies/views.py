@@ -81,19 +81,31 @@ class ActorView(GenreYear, DetailView):
 
 class FilterMoviesView(ListView):
     """Фильтр фильмов"""
+    paginate_by = 2
+
     def get_queryset(self):
         if 'genre' in self.request.GET and 'year' in self.request.GET:
             """Если выбраны и Жанр и Год"""
             queryset = Movie.objects.filter(
                 Q(year__in=self.request.GET.getlist("year")),
                 Q(genres__in=self.request.GET.getlist("genre"))
-            ).distinct()
+            ).distinct() # distinct() убирает повторяющиеся элементы
         else:
             queryset = Movie.objects.filter(
                 Q(year__in=self.request.GET.getlist("year")) |
                 Q(genres__in=self.request.GET.getlist("genre"))
             ).distinct()
         return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["year"] = ''.join([
+            f'year={x}&' for x in self.request.GET.getlist("year")
+        ])
+        context["genre"] = ''.join([
+            f'genre={x}&' for x in self.request.GET.getlist("genre")
+        ])
+        return context
 
 
 class JsonFilterMoviesView(GenreYear, ListView):
