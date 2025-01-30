@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'ckeditor',
     'ckeditor_uploader', # чтоб (через ckeditor) загружать img'ы
+    'snowpenguin.django.recaptcha3',
+
     'movies',
 
 ]
@@ -206,3 +208,9 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+
+RECAPTCHA_PUBLIC_KEY = "6LfEKsgqAAAAAJVOimW8Dbi8fKHbl4Ru8rmXScpV"
+RECAPTCHA_PRIVATE_KEY = "6LfEKsgqAAAAAM1V6SDHJnGzag1FrNRtnpGQj5hc"
+RECAPTCHA_DEFAULT_ACTION = "generic"
+RECAPTCHA_SCORE_THRESHOLD = 0.5
