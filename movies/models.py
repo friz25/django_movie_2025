@@ -121,12 +121,13 @@ class RatingStar(models.Model):
 
     """вернёт 'Количество звёзд' вместо номера id='1' (удобней/наглядней) """
     def __str__(self):
-        return self.value
+        return f'{self.value}'
 
     """то как таблица будет 'написана' в Админке"""
     class Meta:
         verbose_name = "Звезда рейтинга"
         verbose_name_plural = "Звёзды рейтинга"
+        ordering = ["-value"]
 
 
 class Rating(models.Model):
