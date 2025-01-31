@@ -8,4 +8,4 @@ class ContactView(CreateView):
     model = Contact
     form_class = ContactForm
     # (после успешн сраб формы) будет перенаправлять на "главную"
-    success_url = "/" 
+    success_url = "/"

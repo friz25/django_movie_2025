@@ -27,7 +27,7 @@ class GenreYear:
 class MoviesView(GenreYear, ListView):
     """Список фильмов"""
     model = Movie
-    queryset = Movie.objects.filter(draft=False) #вывести все кроме "черновиков"
+    queryset = Movie.objects.filter(draft=False) # вывести все кроме "черновиков"
     # template_name = "movies/movies.html"
     paginate_by = 2 # (пагинация) какое кол эл выводить на страницу
 
@@ -75,11 +75,13 @@ class AddReview(View):
                 form.save() # записываем (данные из формы) в БД
             return redirect(movie.get_absolute_url()) #напр на эту же / обновляет страницу
 
+
 class ActorView(GenreYear, DetailView):
     """Вывод информации о актёре"""
     model = Actor
     template_name = 'movies/actor.html'
     slug_field = "name"
+
 
 class FilterMoviesView(ListView):
     """Фильтр фильмов"""
@@ -130,6 +132,7 @@ class JsonFilterMoviesView(GenreYear, ListView):
         queryset = list(self.get_queryset())
         return JsonResponse({"movies": queryset}, safe=False)
 
+
 class AddStarRaing(View):
     """Добавление рейтинга фильму"""
     def get_client_ip(self, request):
@@ -144,8 +147,8 @@ class AddStarRaing(View):
         form = RatingForm(request.POST)
         if form.is_valid():
             Rating.objects.update_or_create(
-                ip = self.get_client_ip(request),
-                movie_id = int(request.POST.get("movie")),
+                ip=self.get_client_ip(request),
+                movie_id=int(request.POST.get("movie")),
                 defaults={'star_id': int(request.POST.get("star"))}
             )
             return HttpResponse(status=201)

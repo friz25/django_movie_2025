@@ -1,21 +1,24 @@
 from django import forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from modeltranslation.admin import TranslationAdmin
 
 from .models import Category, Genre, Movie, \
     MovieShots, Rating, RatingStar, Reviews, Actor
 
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 class MovieAdminForm(forms.ModelForm):
-    description = forms.CharField(label='Описание' ,widget=CKEditorUploadingWidget())
+    description_ru = forms.CharField(label='Описание', widget=CKEditorUploadingWidget())
+    description_en = forms.CharField(label='Описание', widget=CKEditorUploadingWidget())
 
     class Meta:
         model = Movie
         fields = '__all__'
 
+
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TranslationAdmin):
     """Категори"""
     list_display = ("id", "name", "url")
     list_display_links = ("name",)  # будет ссылкой (открытия записи)
@@ -25,6 +28,7 @@ class ReviewInLine(admin.TabularInline):
     model = Reviews
     extra = 1
     readonly_fields = ("name", "email")  # ток чтение / нельзя изменить (из админки)
+
 
 class MovieShotsInLine(admin.TabularInline):
     model = MovieShots
@@ -36,8 +40,9 @@ class MovieShotsInLine(admin.TabularInline):
 
     get_image.short_description = "Изображение"
 
+
 @admin.register(Movie)
-class MovieAdmin(admin.ModelAdmin):
+class MovieAdmin(TranslationAdmin):
     """Фильмы"""
     list_display = ('title', 'category', 'url', 'draft')
     list_filter = ('category', 'year')  # фильтр панеь (справа)
@@ -102,19 +107,22 @@ class MovieAdmin(admin.ModelAdmin):
 
     get_image.short_description = 'Постер'
 
+
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):
     """Отзывы"""
     list_display = ("name", 'email', 'parent', 'movie', 'id')
     readonly_fields = ("name", "email")  # ток чтение / нельзя изменить (из админки)
 
+
 @admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
+class GenreAdmin(TranslationAdmin):
     """Жанры"""
     list_display = ("name", 'url')
 
+
 @admin.register(Actor)
-class ActorAdmin(admin.ModelAdmin):
+class ActorAdmin(TranslationAdmin):
     """Актёры"""
     list_display = ("name", 'age', 'get_image')
     readonly_fields = ('get_image', )
@@ -124,13 +132,15 @@ class ActorAdmin(admin.ModelAdmin):
 
     get_image.short_description = "Изображение"
 
+
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     """Рейтинг"""
     list_display = ("star", "movie", 'ip')
 
+
 @admin.register(MovieShots)
-class MovieShotsAdmin(admin.ModelAdmin):
+class MovieShotsAdmin(TranslationAdmin):
     """Кадры из фильма"""
     list_display = ("title", 'movie', 'get_image')
     readonly_fields = ('get_image',)
@@ -139,6 +149,7 @@ class MovieShotsAdmin(admin.ModelAdmin):
         return mark_safe(f'<img src={obj.image.url} width="100" height="60"')
 
     get_image.short_description = "Изображение"
+
 
 admin.site.register(RatingStar)
 
