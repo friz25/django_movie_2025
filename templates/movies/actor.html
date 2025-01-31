@@ -1,5 +1,5 @@
 {% extends 'movies/base.html' %}
-{% load static %}
+{% load i18n static %}
 
 {% block title %}
     {{ actor.name }}
@@ -25,9 +25,9 @@
                 </h3>
                 <!--                            <h5 class="editContent">Terminator: Dark Fate</h5>-->
                 <ul>
-                    <li><span><b>Возраст:</b> {{ actor.age }} лет</span></li>
+                    <li><span><b>{% trans 'Возраст:' %}</b> {{ actor.age }} лет</span></li>
                     <li>
-                        <span><b>Режиссер:</b>
+                        <span><b>{% trans 'Режиссер:' %}</b>
                             {% for movie in actor.film_director.all %}
                                 {{ movie.title }}
                             <!--чтоб запятую выводить-->
@@ -35,7 +35,7 @@
                             {% endfor %}
                         </span>
                     </li>
-                    <li><span><b>Актер:</b>
+                    <li><span><b>{% trans 'Актер:' %}</b>
                         {% for movie in actor.film_actor.all %}
                             {{ movie.title }}
                         <!--чтоб запятую выводить-->
