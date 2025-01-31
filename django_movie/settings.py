@@ -136,7 +136,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_REDIRECT_URL = '/'
+# (Заплатка) ответ от email будет крутиться внутри backend
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # (мультияз) тут то на какие яз хотим делать перевод
 gettext = lambda s: s

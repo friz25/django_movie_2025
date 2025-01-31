@@ -29,7 +29,9 @@
                     </ul>
                 </li>
                 <li>
+                    <!-- КНОПКИ АВТОРИЗАЦИИ -->
                     {% if user.is_authenticated %}
+                        <span>{{ user.username }}</span>
                         <a href="{% url 'account_logout' %}"
                            style="color: rgb(255, 255, 255); font-weight: 700; text-transform: uppercase;">
                             {% trans 'Выход' %}
