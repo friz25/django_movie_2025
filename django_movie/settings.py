@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader', # чтоб (через ckeditor) загружать img'ы
     'snowpenguin.django.recaptcha3',
+    'allauth',
+    'allauth.account',
 
     'movies',
     'contact',
@@ -62,6 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'django_movie.urls'
@@ -98,6 +101,10 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -128,6 +135,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+LOGIN_REDIRECT_URL = '/'
 
 # (мультияз) тут то на какие яз хотим делать перевод
 gettext = lambda s: s
