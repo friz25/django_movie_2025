@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-import os
+import os, sys, dotenv
+from datetime import timedelta
 from pathlib import Path
+dotenv.load_dotenv() #для секр переменных (они в .env)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j3biiitmn4&n-p*uit(81x-2cfv1qs0gev3w0fe)n%bq0s^67k'
+SECRET_KEY = os.getenv('DJANGO_MAIN_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
 
+    'rest_framework',
+    'rest_framework.authtoken',
 
     'ckeditor',
     'ckeditor_uploader', # чтоб (через ckeditor) загружать img'ы
@@ -54,6 +58,10 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.discord',
     # 'allauth.socialaccount.providers.steam',
 
+    'djoser',
+    'drf_yasg',
+    'django_filters',
+    'corsheaders',
 
     'movies',
     'contact',
@@ -72,6 +80,7 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
     "allauth.account.middleware.AccountMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'django_movie.urls'
@@ -101,12 +110,38 @@ WSGI_APPLICATION = 'django_movie.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# === SQL версия нашей БД ===
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# === Postgress версия нашей БД ===
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'movie',
+#         'USER': 'postgres',
+#         'PASSWORD': 'friz446625',
+#         'HOST': 'localhost',
+#         'PORT':  '5432',
+#     }
+# }
+
+#region Шаблон Postgress DATABASES / BLANK PostgreSQL SAMPLE
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'db.name',
+#         'USER': 'user_name',
+#         'PASSWORD': 'pass',
+#         'HOST': 'localhost',
+#         'PORT':  '5432',
+#     }
+# }
+#endregion
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -172,6 +207,11 @@ STATICFILES_DIRS = [STATIC_DIR]
 MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = BASE_DIR/'media'
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8000",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -248,9 +288,62 @@ CKEDITOR_CONFIGS = {
 }
 
 
-RECAPTCHA_PUBLIC_KEY = "6LfEKsgqAAAAAJVOimW8Dbi8fKHbl4Ru8rmXScpV"
-RECAPTCHA_PRIVATE_KEY = "6LfEKsgqAAAAAM1V6SDHJnGzag1FrNRtnpGQj5hc"
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_DEFAULT_ACTION = "generic"
 RECAPTCHA_SCORE_THRESHOLD = 0.5
 
 SITE_ID = 1
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 3
+}
+
+# smtp
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'frizmob@gmail.com'
+EMAIL_HOST_PASSWORD = 'friz48625'
+EMAIL_PORT = 587
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {},
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
