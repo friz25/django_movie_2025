@@ -5,7 +5,7 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from modeltranslation.admin import TranslationAdmin
 
 from .models import Category, Genre, Movie, \
-    MovieShots, Rating, RatingStar, Reviews, Actor
+    MovieShots, Rating, RatingStar, Review, Actor
 
 
 class MovieAdminForm(forms.ModelForm):
@@ -41,7 +41,7 @@ class CategoryAdmin(TranslationAdmin):
     # list_filter = ['title', 'year', 'country', 'budget', 'draft']  # +фильтры справа
 
 class ReviewInLine(admin.TabularInline):
-    model = Reviews
+    model = Review
     extra = 1
     readonly_fields = ('parent', "name", "email")  # ток чтение / нельзя изменить (из админки)
 
@@ -71,17 +71,18 @@ class MovieAdmin(TranslationAdmin):
     # filter_vertical = ['actors']
     # ordering = ['rating', 'name']
     list_per_page = 10
-    list_display = ('title', 'category', 'url', 'draft')
+    list_display = ('title', 'category', 'year', 'country', 'budget', 'fees_in_usa', 'fees_in_world', 'url', 'draft')
+    list_editable = ('year', 'country', 'budget', 'fees_in_usa', 'fees_in_world',)  # из списка/каталога менять прям #
     list_filter = ('category', 'year')  # фильтр панеь (справа)
     search_fields = ('title', 'year', 'category__name')  # строка поиска
     inlines = [MovieShotsInLine, ReviewInLine] #список [комментов, кадров из фильма] к фильму
     save_on_top = True  # копия меню "сохранинь" (сверху)
     save_as = True  # можно создать новый фильм "редактируя прошлый"
-    list_editable = ('year', 'country', 'budget', 'fees_in_usa', 'fees_in_world',) # из списка/каталога менять прям
     actions = ['publish', 'unpublish']
     form = MovieAdminForm #CKEditor
     readonly_fields = ('get_image',)
     # fields = (('actors', 'directors', 'genres'), )
+
     # чтоб поля в одну строку
     fieldsets = (
         (None, {
@@ -135,7 +136,7 @@ class MovieAdmin(TranslationAdmin):
     get_image.short_description = 'Постер'
 
 
-@admin.register(Reviews)
+@admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     # """Отзывы"""
     # list_display = ("name", 'email', 'parent', 'movie', 'id')

@@ -90,7 +90,7 @@ class Movie(models.Model):
 
     """возвращает (только) родительские отзывы к фильму"""
     def get_review(self):
-        return self.reviews_set.filter(parent__isnull=True)
+        return self.review_set.filter(parent__isnull=True)
 
     """то как таблица будет 'написана' в Админке"""
     class Meta:
@@ -146,7 +146,7 @@ class Rating(models.Model):
         verbose_name_plural = "Рейтинги"
 
 
-class Reviews(models.Model):
+class Review(models.Model):
     """Отзывы"""
     email = models.EmailField()
     name = models.CharField("Имя", max_length=100)

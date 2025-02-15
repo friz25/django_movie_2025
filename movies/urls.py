@@ -17,13 +17,13 @@ urlpatterns = [
     path("actor/<str:slug>/", views.ActorView.as_view(), name="actor_detail"),
 ]
 
-urlpatterns += 'api/v1/' + format_suffix_patterns([
-    path("movie/", views.MovieViewSet.as_view({'get': 'list'}, name='movies_list')), # http://127.0.0.1:8001/api/v1/movie/
-    path("movie/<int:pk>/", views.MovieViewSet.as_view({'get': 'retrieve'})), # http://127.0.0.1:8001/api/v1/movie/1
-    path("review/", views.ReviewCreateViewSet.as_view({'post': 'create'})), # http://127.0.0.1:8001/api/v1/review/
-    path("rating/", views.AddStarRatingViewSet.as_view({'post': 'create'})), # http://127.0.0.1:8001/api/v1/rating/ {"star":3, "movie": 1}
-    # path("actors/", views.ActorsListView.as_view()), # http://127.0.0.1:8001/api/v1/actors/
-    # path("actors/<int:pk>", views.ActorsDetailView.as_view()), # http://127.0.0.1:8001/api/v1/actors/1
-    path("actor/", views.ActorsViewSet.as_view({'get': 'list'})), # [14] http://127.0.0.1:8001/api/v1/actor/
-    path("actor/<int:pk>", views.ActorsViewSet.as_view({'get': 'retrieve'})), # [14] http://127.0.0.1:8001/api/v1/actor/1
+urlpatterns += format_suffix_patterns([
+    path("api/v1/movie/", views.MovieViewSet.as_view({'get': 'list'}, name='movies_list')), # http://127.0.0.1:8001/api/v1/movie/
+    path("api/v1/movie/<int:pk>/", views.MovieViewSet.as_view({'get': 'retrieve'})), # http://127.0.0.1:8001/api/v1/movie/1
+    path("api/v1/review/", views.ReviewCreateViewSet.as_view({'post': 'create'})), # http://127.0.0.1:8001/api/v1/review/
+    path("api/v1/rating/", views.AddStarRatingViewSet.as_view({'post': 'create'})), # http://127.0.0.1:8001/api/v1/rating/ {"star":3, "movie": 1}
+    # path("api/v1/actors/", views.ActorsListView.as_view()), # http://127.0.0.1:8001/api/v1/actors/
+    # path("api/v1/actors/<int:pk>", views.ActorsDetailView.as_view()), # http://127.0.0.1:8001/api/v1/actors/1
+    path("api/v1/actor/", views.ActorsViewSet.as_view({'get': 'list'})), # [14] http://127.0.0.1:8001/api/v1/actor/
+    path("api/v1/actor/<int:pk>", views.ActorsViewSet.as_view({'get': 'retrieve'})), # [14] http://127.0.0.1:8001/api/v1/actor/1
 ])

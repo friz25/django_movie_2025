@@ -1,7 +1,7 @@
 from django import forms
 from snowpenguin.django.recaptcha3.fields import ReCaptchaField
 
-from .models import Reviews, Rating, RatingStar
+from .models import Review, Rating, RatingStar
 
 
 class ReviewForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class ReviewForm(forms.ModelForm):
     captcha = ReCaptchaField()
 
     class Meta:
-        model = Reviews
+        model = Review
         fields = ("name", "email", "text", "captcha")
         # widget потому что мы будем рендерить нашу форму
         # (а нам нужно чтоб остались норм стили полей формы)

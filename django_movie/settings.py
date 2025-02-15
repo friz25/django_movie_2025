@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.discord',
     # 'allauth.socialaccount.providers.steam',
 
-    'djoser',
+    #'djoser',
     'drf_yasg',
     'django_filters',
     'corsheaders',
