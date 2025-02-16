@@ -134,7 +134,7 @@ class JsonFilterMoviesView(GenreYear, ListView):
         return JsonResponse({"movies": queryset}, safe=False)
 
 
-class AddStarRaing(View):
+class AddStarRating(View):
     """Добавление рейтинга фильму"""
     def get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
