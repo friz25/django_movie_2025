@@ -1,0 +1,1 @@
+from django_movie.V_settings.installed_apps import *
