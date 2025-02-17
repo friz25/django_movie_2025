@@ -33,47 +33,60 @@ ALLOWED_HOSTS = []
 # Application definition
 
 """добавляем INSTALLED_APPS из внешнего файла"""
-from django_movie.V_settings import *
+# from django_movie.V_settings import *
 
 # 2 стр ниже => чтоб проверить что INSTALLED_APPS появилась И заполнена
 # import pprint
 # pprint.pprint(locals())
 
-# INSTALLED_APPS = [
-#     'modeltranslation',
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
-#     'django.contrib.sites',
-#     'django.contrib.flatpages',
-#
-#     'rest_framework',
-#     'rest_framework.authtoken',
-#
-#     'ckeditor',
-#     'ckeditor_uploader', # чтоб (через ckeditor) загружать img'ы
-#     'snowpenguin.django.recaptcha3',
-#     'allauth',
-#     'allauth.account',
-#     'allauth.socialaccount',
-#     'allauth.socialaccount.providers.vk',
-#     # 'allauth.socialaccount.providers.google',
-#     # 'allauth.socialaccount.providers.facebook',
-#     # 'allauth.socialaccount.providers.discord',
-#     # 'allauth.socialaccount.providers.steam',
-#
-#     #'djoser',
-#     'drf_yasg',
-#     'django_filters',
-#     'corsheaders',
-#
-#     'movies',
-#     'contact',
-#
-# ]
+INSTALLED_APPS = [
+    # 'daphne',
+    'chat',
+
+    'modeltranslation',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    'ckeditor',
+    'ckeditor_uploader', # чтоб (через ckeditor) загружать img'ы
+    'snowpenguin.django.recaptcha3',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.vk',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.discord',
+    # 'allauth.socialaccount.providers.steam',
+
+    #'djoser',
+    'drf_yasg',
+    'django_filters',
+    'corsheaders',
+
+    'movies',
+    'contact',
+
+]
+# Daphne
+ASGI_APPLICATION = "mysite.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
