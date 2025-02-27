@@ -113,7 +113,7 @@ services:
 #    command: python manage.py runserver 0.0.0.0:8000
     command: ./app/backend_entrypoint.sh # Запуск скрипта (migrate + runserver)
     volumes:
-      - C:\Django\django_movie_2025\django_movie\django_movie:/app/django_movie/
+      - C:\Django\django_movie_2025\django_movie\:/app/
     ports:
       - "8000:8000"
 #    expose:

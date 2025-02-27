@@ -201,9 +201,9 @@ class MovieListView(generics.ListAPIView):
 
     def get_queryset(self):
         movies = Movie.objects.filter(draft=False).annotate(
-            rating_user=models.Count("ratings", filter=models.Q(ratings__ip=get_client_ip(self.request)))
+            rating_user=models.Count("rating", filter=models.Q(rating__ip=get_client_ip(self.request)))
         ).annotate(
-            middle_star=models.Sum(models.F('ratings__star')) / models.Count(models.F('ratings'))
+            middle_star=models.Sum(models.F('rating__star')) / models.Count(models.F('rating'))
         )
         return movies
 '''
@@ -222,9 +222,9 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         movies = Movie.objects.filter(draft=False).annotate(
-            rating_user=models.Count("ratings", filter=models.Q(ratings__ip=get_client_ip(self.request)))
+            rating_user=models.Count("rating", filter=models.Q(rating__ip=get_client_ip(self.request)))
         ).annotate(
-            middle_star=models.Sum(models.F('ratings__star')) / models.Count(models.F('ratings'))
+            middle_star=models.Sum(models.F('rating__star')) / models.Count(models.F('rating'))
         )
         return movies
 
