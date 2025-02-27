@@ -1,0 +1,149 @@
+#version: '3.5'
+#networks:
+#  chat:
+services:
+
+#  postgres:
+#    image: postgres:13.3
+#    environment:
+#      POSTGRES_DB: "postgres333"
+#      POSTGRES_USER: "admin"
+#      POSTGRES_PASSWORD: "admin"
+#    ports:
+#      - "5432:5432"
+#    expose:
+#    - 5432
+#  psql -U habrpguser -d habrdb
+#  psql --username=habrpguser --dbname=habrdb
+#  psql --username=admin --dbname=chat_postgres
+#  psql --username=admin --dbname=postgres222
+
+  # PostgreSQL
+  db:
+    image: postgres:14.16-alpine3.20
+    container_name: db_postgres
+    ports:
+      - "5432:5432"
+    expose:
+    - 5432
+    volumes:
+    - .:/docker-entrypoint-initdb.d
+#    - ./_volume/postgres/postgres_data:/var/lib/postgresql/data/
+    - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: "tinder_postgres"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+#      PGDATA: C:\PostgreSQL\data
+#      PGDATA: C:\Django\221_websocket_django_CHAT\mysite\_volume\postgres\postgres_data
+      PGDATA: /var/lib/postgresql/data/
+#      POSTGRES_INITDB_ARGS: "-A md5" # (!)error: эта строчка неисправна
+#    networks:
+#      - chat
+#  psql --username=admin --dbname=chat_postgres
+
+
+#  postgres:
+#    image: postgres:14.16-alpine3.20
+#    restart: on-failure
+#    command: -c fsync=off -c full_page_writes=off
+#    container_name: 'db_postgres'
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      POSTGRES_DB: "postgres"
+#      POSTGRES_USER: "admin"
+#      POSTGRES_PASSWORD: "admin"
+#      PGDATA: C:\PostgreSQL\data
+#      POSTGRES_INITDB_ARGS: "-A md5"
+#    healthcheck:
+#      test: [ "CMD", "pg_isready", "-U", "postgres"]
+#      interval: 1s
+#      timeout: 1s
+#      retries: 60
+#    networks:
+#      - chat
+
+#  redis:
+#    ports:
+#      - 6379:6379
+#    image: redis:7
+
+  redis:
+    image: redis:8.0-M03-alpine3.21
+    container_name: 'redis_dj_training'
+    hostname: 'redis'
+    ports:
+      - "6379:6379"
+    expose:
+    - 6379
+    environment:
+      - REDIS_PASSWORD=admin
+      - REDIS_REPLICATION_MODE=master
+    volumes:
+      - ./_volume/redis/redis.conf:/usr/local/etc/redis/redis.conf
+#    command: redis-server --requirepass admin --include /usr/local/etc/redis/redis.conf
+    command: redis-server
+#    networks:
+#      - chat
+
+#=== Работает (в терм)
+#redis:
+#    image: redis:8.0-M03-alpine3.21
+#    container_name: 'redis_dj_training'
+#    hostname: 'redis'
+#    ports:
+#      - "6379:6379"
+#    expose:
+#    - 6379
+#    environment:
+#      - REDIS_PASSWORD=admin
+#      - REDIS_REPLICATION_MODE=master
+#    volumes:
+#      - ./_volume/redis/redis.conf:/usr/local/etc/redis/redis.conf
+#    command: redis-server
+
+  # Django
+  tinder:
+#    depends_on:
+#      - db
+#      - redis
+    build: .
+    container_name: tinder--dj-backend
+#    command: python manage.py runserver 0.0.0.0:8000
+    command: ./app/backend_entrypoint.sh # Запуск скрипта (migrate + runserver)
+    volumes:
+      - C:\Django\django_movie_2025\django_movie\django_movie:/app/django_movie/
+    ports:
+      - "8000:8000"
+#    expose:
+#      - 8000
+    environment:
+      - POSTGRES_NAME=tinder_postgres
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+#    networks:
+#      - chat
+
+  nginx:
+    image: nginx:1.27.4-alpine3.21
+#    depends_on:
+#      - chat_dj_backend
+    container_name: 'nginx_dj_training'
+    restart: on-failure
+    ports:
+      - "80:80"
+    volumes:
+##      - /Users/mihailkiselev/Projects/Bookstore_Full/nginx/html:/usr/share/nginx/html
+##      - /Users/mihailkiselev/Projects/Bookstore_Full/nginx/.nginx:/etc/nginx
+#      - C:\Django\222\AutoTest_to_GitAction\AutoTest_to_GitAction-192\Dj_Docker\_volume\nginx\html:/usr/share/nginx/html
+#      - C:\Django\222\AutoTest_to_GitAction\AutoTest_to_GitAction-192\Dj_Docker\_volume\nginx\.nginx:/etc/nginx
+#      - static:/car/www/html/static
+      - ./static:/app/static
+#      - ./nginx-conf.d:/etc/nginx/conf.d
+      - ./_volume/nginx/nginx.conf:/etc/nginx/nginx.conf
+#    networks:
+#      - chat
+
+volumes:
+  postgres_data:
