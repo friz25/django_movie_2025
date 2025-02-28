@@ -327,11 +327,16 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'frizmob@gmail.com'
 EMAIL_HOST_PASSWORD = 'friz48625'
 EMAIL_PORT = 587
-
+"""
+#=== Зайти в терминал контейнера (в Pycharm) : ===
+b4b9b9017eb3
+docker exec -it b4b9b9017eb3 /bin/bash
+"""
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' пароль
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' имя юзера
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    # 'SEND_ACTIVATION_EMAIL': False, #это если "создать юзера (без подтверждения Email)"
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {},
 }

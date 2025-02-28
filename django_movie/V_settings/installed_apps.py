@@ -10,7 +10,7 @@ INSTALLED_APPS = [
         'django.contrib.flatpages',
 
         'rest_framework',
-        'rest_framework.authtoken',
+        'rest_framework.authtoken', # [10] auth/регистрация
 
         'ckeditor',
         'ckeditor_uploader',  # чтоб (через ckeditor) загружать img'ы
@@ -24,7 +24,7 @@ INSTALLED_APPS = [
         # 'allauth.socialaccount.providers.discord',
         # 'allauth.socialaccount.providers.steam',
 
-        # 'djoser',
+        'djoser', # [10] auth/регистрация
         'drf_yasg',
         'django_filters',
         'corsheaders',

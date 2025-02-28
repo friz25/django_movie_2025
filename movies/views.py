@@ -173,7 +173,7 @@ class Search(ListView):
 #region === REST PART ==============================
 
 from django.db import models # дописали [6]
-from rest_framework import generics, permissions, viewsets # [14]
+from rest_framework import generics, permissions, viewsets # [9][10][14]
 # from rest_framework.response import Response # удалили [9]
 # from rest_framework.views import APIView # удалили [9]
 from django_filters.rest_framework import DjangoFilterBackend # [10] фильтр
@@ -218,7 +218,7 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,) #подключили фильт django
     filterset_class = MovieFilter # http://127.0.0.1:8001/api/v1/movie/?year_min=1983&year_max=2022&genres=Боевик
     pagination_class = PaginationMovies
-    # permission_classes = [permissions.IsAuthenticated] # Добавил
+    permission_classes = [permissions.IsAuthenticated] # [10] Добавил
 
     def get_queryset(self):
         movies = Movie.objects.filter(draft=False).annotate(
