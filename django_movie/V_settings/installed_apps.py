@@ -30,7 +30,7 @@ INSTALLED_APPS = [
         'social_django', #[13] вход через VK
         'rest_framework_social_oauth2', #[13] вход через VK
         'django_filters', #[9] фильтр
-        'corsheaders',
+        'corsheaders', #[15]
 
         'movies',
         'contact',
