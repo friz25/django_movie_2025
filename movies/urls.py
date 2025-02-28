@@ -27,3 +27,11 @@ urlpatterns += format_suffix_patterns([
     path("api/v1/actor/", views.ActorsViewSet.as_view({'get': 'list'})), # [14] http://127.0.0.1:8001/api/v1/actor/
     path("api/v1/actor/<int:pk>", views.ActorsViewSet.as_view({'get': 'retrieve'})), # [14] http://127.0.0.1:8001/api/v1/actor/1
 ])
+
+
+
+
+#####чтоб автогенерация url для наших классов: ########
+# router = DefaultRouter()
+# router.register(r'actor-set', api.ActorViewSet, basename='actor')
+# router.register(r'actor-read', api.ActorReadOnly, basename='actor')

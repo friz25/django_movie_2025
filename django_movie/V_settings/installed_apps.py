@@ -25,8 +25,11 @@ INSTALLED_APPS = [
         # 'allauth.socialaccount.providers.steam',
 
         'djoser', # [10] auth/регистрация
-        'drf_yasg',
-        'django_filters',
+        'drf_yasg', #[12] автодок-я swagger/redoc (drf-yasg)
+        'oauth2_provider', #[13] вход через VK
+        'social_django', #[13] вход через VK
+        'rest_framework_social_oauth2', #[13] вход через VK
+        'django_filters', #[9] фильтр
         'corsheaders',
 
         'movies',

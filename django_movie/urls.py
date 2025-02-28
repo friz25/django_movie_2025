@@ -23,8 +23,10 @@ from .yasg import urlpatterns as doc_urls
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
+    path('auth/', include('rest_framework_social_oauth2.urls')), #[13] вход через VK
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls.jwt')),
 
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
