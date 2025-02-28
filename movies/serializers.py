@@ -26,6 +26,7 @@ def serialize_user(user: User) -> Dict[str, Any]:
 #-------------------------------------------------
 
 class MovieListSerializer(serializers.Serializer):
+    """ Список фильмов """
     id = serializers.IntegerField()
     title = serializers.CharField()
     tagline = serializers.CharField()
@@ -45,12 +46,13 @@ class MovieListSerializer(serializers.Serializer):
 class FilterReviewListSerializer(serializers.ListSerializer):
     """ Фильтр комментов, только parents """
     def to_representation(self, data):
+        #тут data = наш queryset отзывов (мы фильтруем его и находим только те записи у которых parent=None)
         data = data.filter(parent=None)
         return super().to_representation(data)
 
 class RecursiveSerializer(serializers.Serializer):
     """ Вывод рекурсивно children """
-    def to_representation(self, value):
+    def to_representation(self, value): #value = значение одной записи из БД
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
 
@@ -81,6 +83,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         list_serializer_class = FilterReviewListSerializer
         model = Review
         fields = ("name", "text", "children")
+        # fields = ("name", "text", "parent")
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     """ Полный фильмов """

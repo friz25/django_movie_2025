@@ -34,7 +34,7 @@ class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
     pass
 
 class MovieFilter(filters.FilterSet):
-    """ [10] """
+    """ [10] фильтр (по годам / жанрам) """
     genres = CharFilterInFilter(field_name='genres__name', lookup_expr='in')
     year = filters.RangeFilter()
 
