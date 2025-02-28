@@ -15,6 +15,7 @@ DATABASES = {
 }
 #----------------------
 """
+import datetime
 import os, sys, dotenv
 from datetime import timedelta
 from pathlib import Path
@@ -317,9 +318,16 @@ AUTHENTICATION_BACKENDS = (
 )
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.AllowAny',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication', #[17] jwt
+        'rest_framework.authentication.SessionAuthentication', #[17] jwt
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication', #[17] jwt #удалить
+        'rest_framework_simplejwt.authentication.JWTAuthentication', #[17] jwt
 
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  #[13] вход через VK
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
@@ -327,8 +335,12 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ( #[9] Фильтр
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination', #[16] Пагинация
-    'PAGE_SIZE': 3
+    'DEFAULT_PAGINATION_CLASS':
+        # 'rest_framework.pagination.LimitOffsetPagination', #[16] Пагинация
+        'rest_framework_json_api.pagination.PageNumberPagination', #[17] jwt #Пагинация
+    'PAGE_SIZE': 3,
+
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json', #[17] jwt #для тестов
 }
 
 # smtp
@@ -342,6 +354,12 @@ EMAIL_PORT = 587
 b4b9b9017eb3
 docker exec -it b4b9b9017eb3 /bin/bash
 """
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=2),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7) # default #можно ли "продлять жизнь токена"
+}
+
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' пароль
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' имя юзера
@@ -349,32 +367,79 @@ DJOSER = {
     # 'SEND_ACTIVATION_EMAIL': False, #это если "создать юзера (без подтверждения Email)"
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {},
+
+    # 'ACTIVATION_URL': 'auth/activate/{uid}/{token}/', #[17] jwt
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,  #[17] jwt
+    # 'PASSWORD_RESET_CONFIRM_URL': 'auth/password/reset/confirm/{uid}/{token}/', #[17] jwt
+    'TOKEN_MODEL': None, #[17] jwt
+    "LOGIN_FIELD": "username",  #[17] jwt
 }
 
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': False,
+#     'BLACKLIST_AFTER_ROTATION': True,
+#
+#     'ALGORITHM': 'HS256',
+#     'SIGNING_KEY': SECRET_KEY,
+#     'VERIFYING_KEY': None,
+#     'AUDIENCE': None,
+#     'ISSUER': None,
+#
+#     'AUTH_HEADER_TYPES': ('JWT',),
+#     'USER_ID_FIELD': 'id',
+#     'USER_ID_CLAIM': 'user_id',
+#
+#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#     'TOKEN_TYPE_CLAIM': 'token_type',
+#
+#     'JTI_CLAIM': 'jti',
+#
+#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+# }
+
+#===офф документация Simple JWT=========
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
 
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JSON_ENCODER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
 
-    'AUTH_HEADER_TYPES': ('JWT',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
+    "AUTH_HEADER_TYPES": ("JWT",), # Слово перед токеном "Token asdadasd231as3"
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
 
-    'JTI_CLAIM': 'jti',
+    "JTI_CLAIM": "jti",
+    # параметры для Sliding токенов :
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
+    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
+    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
 SWAGGER_SETTINGS = {

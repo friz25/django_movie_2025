@@ -11,6 +11,7 @@ INSTALLED_APPS = [
 
         'rest_framework',
         'rest_framework.authtoken', # [10] auth/регистрация
+        'rest_framework_json_api', # [17] jwt
 
         'ckeditor',
         'ckeditor_uploader',  # чтоб (через ckeditor) загружать img'ы
