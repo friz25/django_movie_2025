@@ -90,7 +90,10 @@ class Movie(models.Model):
 
     """возвращает (только) родительские отзывы к фильму"""
     def get_review(self):
-        return self.review_set.filter(parent__isnull=True)
+        # return self.review_set.filter(parent__isnull=True)
+        return self.reviews.filter(parent__isnull=True)
+        """заменили 'review_set' на 'reviews' потому что в модели Reviews/поле movie
+         указали related_name="reviews" """
 
     """то как таблица будет 'написана' в Админке"""
     class Meta:

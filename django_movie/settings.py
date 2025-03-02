@@ -94,7 +94,7 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
     "allauth.account.middleware.AccountMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', #[15]
 ]
 
 ROOT_URLCONF = 'django_movie.urls'
@@ -222,7 +222,7 @@ MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = BASE_DIR/'media'
 
-CORS_ORIGIN_WHITELIST = [
+CORS_ORIGIN_WHITELIST = [   # [15] добавление cors
     "http://localhost:8080",
     "http://127.0.0.1:8000",
 ]
@@ -315,9 +315,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
+        'django_filters.rest_framework.DjangoFilterBackend', #[9] Фильтр
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination', #[16] Пагинация
     'PAGE_SIZE': 3
 }
 

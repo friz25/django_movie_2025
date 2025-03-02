@@ -219,6 +219,7 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = MovieFilter # http://127.0.0.1:8001/api/v1/movie/?year_min=1983&year_max=2022&genres=Боевик
     pagination_class = PaginationMovies
     permission_classes = [permissions.IsAuthenticated] # [10] Добавил
+    # permission_classes = [permissions.AllowAny] # разрешать любые запросы (CRUD) И любому юзеру
 
     def get_queryset(self):
         movies = Movie.objects.filter(draft=False).annotate(
@@ -233,6 +234,7 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list':
+            """ Вывод списка фильмов """
             start = time.time()
             m = MovieListSerializer
             end = time.time()
@@ -241,6 +243,7 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
             return m
             # return serialize_movie()
         elif self.action == 'retrieve':
+            """ Вывод одного фильма (детально) """
             return MovieDetailSerializer
     #-----------------------------------
     from typing import Dict, Any
