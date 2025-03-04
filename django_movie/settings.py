@@ -223,6 +223,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/'media'
 
 CORS_ORIGIN_WHITELIST = [   # [15] добавление cors
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
     "http://localhost:8080",
     "http://127.0.0.1:8000",
 ]
@@ -330,7 +332,7 @@ EMAIL_PORT = 587
 """
 #=== Зайти в терминал контейнера (в Pycharm) : ===
 b4b9b9017eb3
-docker exec -it b4b9b9017eb3 /bin/bash
+docker exec -it e1b24682b1fc /bin/bash
 """
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' пароль
