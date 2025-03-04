@@ -81,6 +81,16 @@ from django_movie.V_settings import *
 #     'contact',
 #
 # ]
+# Daphne
+ASGI_APPLICATION = "django_movie.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis_dj_training", 6379)],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -330,7 +340,7 @@ EMAIL_PORT = 587
 """
 #=== Зайти в терминал контейнера (в Pycharm) : ===
 b4b9b9017eb3
-docker exec -it b4b9b9017eb3 /bin/bash
+docker exec -it a250f594c0c7 /bin/bash
 """
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' пароль

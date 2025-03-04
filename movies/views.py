@@ -218,8 +218,8 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,) #подключили фильт django
     filterset_class = MovieFilter # http://127.0.0.1:8001/api/v1/movie/?year_min=1983&year_max=2022&genres=Боевик
     pagination_class = PaginationMovies
-    permission_classes = [permissions.IsAuthenticated] # [10] Добавил
-    # permission_classes = [permissions.AllowAny] # разрешать любые запросы (CRUD) И любому юзеру
+    # permission_classes = [permissions.IsAuthenticated] # [10] Добавил
+    permission_classes = [permissions.AllowAny] # разрешать любые запросы (CRUD) И любому юзеру
 
     def get_queryset(self):
         movies = Movie.objects.filter(draft=False).annotate(
