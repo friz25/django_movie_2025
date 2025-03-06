@@ -188,7 +188,7 @@ from .serializers import (
     ActorDetailSelializer
 )
 from .service import get_client_ip, MovieFilter, PaginationMovies
-from .permisssions import IsSuperUser #[17] кастомные права доступа
+from .permisssions import IsSuperUser, IsReviewAuthor #[17] кастомные права доступа
 
 import time
 
@@ -277,7 +277,9 @@ class MovieDetailView(generics.RetrieveAPIView):
 class ReviewDestroy(generics.DestroyAPIView):
     """[DEL] Удалить отзыв """
     queryset = Review.objects.all()
+    serializer_class = ReviewCreateSerializer
     permission_classes = [IsSuperUser]  #[17] кастомные права доступа
+    # permission_classes = [IsReviewAuthor]  #если юзер = автор коммента (по email)
 
 # '''
 '''[v1]

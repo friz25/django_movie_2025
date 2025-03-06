@@ -2,10 +2,15 @@ from django.http import Http404
 from rest_framework.permissions import BasePermission
 
 class IsSuperUser(BasePermission):
-
     def has_permission(self, request, view):
         """ проверка (этот) юзер = суперЮзер? """
         return bool(request.user and request.user.is_superuser)
+
+class IsReviewAuthor(BasePermission):
+    # def has_permission(self, request, view):
+    def has_object_permission(self, request, view, obj):
+        """ проверка (этот) юзер = автор (этого) отзыва? """
+        return request.user.email == request.obj.email
 
 # class AuthorPermissionsMixin:
 #     def has_permissions(self):
