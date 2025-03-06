@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 
-from .models import Actor, Movie, Genre, Rating
+from .models import Actor, Movie, Genre, Rating, Review
 from .forms import ReviewForm, RatingForm
 
 
@@ -188,6 +188,7 @@ from .serializers import (
     ActorDetailSelializer
 )
 from .service import get_client_ip, MovieFilter, PaginationMovies
+from .permisssions import IsSuperUser #[17] кастомные права доступа
 
 import time
 
@@ -218,7 +219,7 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,) #подключили фильт django
     filterset_class = MovieFilter # http://127.0.0.1:8001/api/v1/movie/?year_min=1983&year_max=2022&genres=Боевик
     pagination_class = PaginationMovies
-    permission_classes = [permissions.IsAuthenticated] # [10] Добавил
+    # permission_classes = [permissions.IsAuthenticated] # [10] Добавил
     # permission_classes = [permissions.AllowAny] # разрешать любые запросы (CRUD) И любому юзеру
 
     def get_queryset(self):
@@ -265,12 +266,20 @@ class MovieDetailView(APIView):
         serializer = MovieDetailSerializer(movie)
         return Response(serializer.data)
 '''
-'''[v2]
+# '''[v2]
 class MovieDetailView(generics.RetrieveAPIView):
     """ [GET] Вывод фильма [9]"""
     queryset = Movie.objects.filter(draft=False)
     serializer_class = MovieDetailSerializer
-'''
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]  # [10] Добавил
+
+
+class ReviewDestroy(generics.DestroyAPIView):
+    """[DEL] Удалить отзыв """
+    queryset = Review.objects.all()
+    permission_classes = [IsSuperUser]  #[17] кастомные права доступа
+
+# '''
 '''[v1]
 class ReviewCreateView(APIView):
     """ [POST] Добавление комментария (к фильму) """

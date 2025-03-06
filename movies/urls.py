@@ -19,8 +19,12 @@ urlpatterns = [
 
 urlpatterns += format_suffix_patterns([
     path("api/v1/movie/", views.MovieViewSet.as_view({'get': 'list'}, name='movies_list')), # http://127.0.0.1:8001/api/v1/movie/
-    path("api/v1/movie/<int:pk>/", views.MovieViewSet.as_view({'get': 'retrieve'})), # http://127.0.0.1:8001/api/v1/movie/1
+    # path("api/v1/movie/<int:pk>/", views.MovieViewSet.as_view({'get': 'retrieve'})), # http://127.0.0.1:8001/api/v1/movie/1
+    path("api/v1/movie/<int:pk>", views.MovieDetailView.as_view()),
+
     path("api/v1/review/", views.ReviewCreateViewSet.as_view({'post': 'create'})), # http://127.0.0.1:8001/api/v1/review/
+    path("api/v1/review/<int:pk>", views.ReviewDestroy.as_view()), #[17] кастомные права доступа
+
     path("api/v1/rating/", views.AddStarRatingViewSet.as_view({'post': 'create'})), # http://127.0.0.1:8001/api/v1/rating/ {"star":3, "movie": 1}
     # path("api/v1/actors/", views.ActorsListView.as_view()), # http://127.0.0.1:8001/api/v1/actors/
     # path("api/v1/actors/<int:pk>", views.ActorsDetailView.as_view()), # http://127.0.0.1:8001/api/v1/actors/1
