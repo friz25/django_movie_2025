@@ -5,7 +5,7 @@
 которые будут участвовать переводе
 """
 from modeltranslation.translator import register, TranslationOptions
-from .models import Category, Actor, Movie, Genre, MovieShots
+from .models import Category, Actor, Movie, Genre, MovieShots, Profile, ProfilePics
 
 @register(Category)
 class CategoryTranslationOptions(TranslationOptions):
@@ -29,6 +29,16 @@ class MovieTranslationOptions(TranslationOptions):
 
 @register(MovieShots)
 class MovieShotsTranslationOptions(TranslationOptions):
+    fields = ('title', 'description')
+
+
+@register(Profile)
+class ProfileTranslationOptions(TranslationOptions):
+    fields = ('description', 'gender')
+
+
+@register(ProfilePics)
+class ProfilePicsTranslationOptions(TranslationOptions):
     fields = ('title', 'description')
 
 

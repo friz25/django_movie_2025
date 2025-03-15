@@ -1,4 +1,7 @@
 INSTALLED_APPS = [
+        'daphne',
+        'chat',
+
         'modeltranslation',
         'django.contrib.admin',
         'django.contrib.auth',

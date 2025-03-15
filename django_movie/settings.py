@@ -81,6 +81,16 @@ from django_movie.V_settings import *
 #     'contact',
 #
 # ]
+# Daphne
+ASGI_APPLICATION = "django_movie.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis_dj_training", 6379)],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -328,18 +338,19 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'frizmob@gmail.com'
 EMAIL_HOST_PASSWORD = 'friz48625'
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') #это google пароль приложения
 EMAIL_PORT = 587
 """
 #=== Зайти в терминал контейнера (в Pycharm) : ===
 b4b9b9017eb3
-docker exec -it b4b9b9017eb3 /bin/bash
+docker exec -it 3b8e5ce07c47 /bin/bash
 """
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' пароль
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' имя юзера
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    # 'SEND_ACTIVATION_EMAIL': False, #это если "создать юзера (без подтверждения Email)"
-    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': False, #это если "создать юзера (без подтверждения Email)"
+    # 'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {},
 }
 
@@ -384,3 +395,8 @@ SWAGGER_SETTINGS = {
       }
    }
 }
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID') #ТВОЙ_AWS_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY') #ТВОЙ_AWS_SECRET_KEY
+AWS_REGION = "eu-central-1"
+AWS_STORAGE_BUCKET_NAME = "s3.movie"

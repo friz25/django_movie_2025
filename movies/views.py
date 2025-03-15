@@ -220,7 +220,7 @@ class MovieViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = MovieFilter # http://127.0.0.1:8001/api/v1/movie/?year_min=1983&year_max=2022&genres=Боевик
     pagination_class = PaginationMovies
     # permission_classes = [permissions.IsAuthenticated] # [10] Добавил
-    # permission_classes = [permissions.AllowAny] # разрешать любые запросы (CRUD) И любому юзеру
+    permission_classes = [permissions.AllowAny] # разрешать любые запросы (CRUD) И любому юзеру
 
     def get_queryset(self):
         movies = Movie.objects.filter(draft=False).annotate(
@@ -266,7 +266,7 @@ class MovieDetailView(APIView):
         serializer = MovieDetailSerializer(movie)
         return Response(serializer.data)
 '''
-# '''[v2]
+'''[v2]==== тут тест ПРАВА ДОСТУПА ====
 class MovieDetailView(generics.RetrieveAPIView):
     """ [GET] Вывод фильма [9]"""
     queryset = Movie.objects.filter(draft=False)
@@ -281,7 +281,7 @@ class ReviewDestroy(generics.DestroyAPIView):
     permission_classes = [IsSuperUser]  #[17] кастомные права доступа
     # permission_classes = [IsReviewAuthor]  #если юзер = автор коммента (по email)
 
-# '''
+'''
 '''[v1]
 class ReviewCreateView(APIView):
     """ [POST] Добавление комментария (к фильму) """
@@ -374,3 +374,87 @@ class ActorsViewSet(viewsets.ReadOnlyModelViewSet):
             return ActorDetailSelializer
 
 #endregion
+
+#region ==== AWS S3 хранилище
+import boto3
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.conf import settings
+
+
+class S3FileUploadView(APIView):
+    permission_classes = [permissions.AllowAny]
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        # file = request.FILES.get('file')
+        file = list(request.FILES.values())[0] #чтоб любое имя поля файл (а не только 'file')
+        if not file:
+            return Response({'error': 'No file provided'}, status=400)
+
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_REGION
+        )
+
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+        file_key = file.name
+
+        try:
+            s3.upload_fileobj(file, bucket_name, file_key)
+            file_url = f"https://{bucket_name}.s3.{settings.AWS_REGION}.amazonaws.com/{file_key}"
+            return Response({'file_url': file_url}, status=201)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+#endregion ==== /AWS S3 хранилище =======
+# from django.shortcuts import render, redirect
+# from django.http import HttpResponse
+# from .forms import UserRegisterForm, ProfileUpdateForm
+# from django.contrib import messages
+# from django.views.generic import UpdateView, CreateView
+# from django.contrib.auth.decorators import login_required
+# from .models import *
+# from main.models import Message
+#
+# def register(req):
+#     if req.method == "POST":
+#         Form = UserRegisterForm(req.POST)
+#         if Form.is_valid():
+#             Form.save()
+#             username = Form.cleaned_data.get("username")
+#             messages.success(req, f"Account Created. You can now log in")
+#             return redirect("login")
+#     else:
+#         Form = UserRegisterForm()
+#     return render(req, "users/register.html", {'form': Form})
+#
+#
+# @login_required
+# def profile(req):
+#     user = req.user
+#     profile = Profile.objects.get(user=user)
+#     likes = profile.num_likes
+#     unreadMessages = Message.objects.filter(
+#         receiver=req.user).filter(status=False).count()
+#     if req.method == "POST":
+#         form = ProfileUpdateForm(
+#             req.POST, req.FILES, instance=req.user.profile)
+#
+#         if form.is_valid():
+#             form.save()
+#             messages.success(req, "Account Updated")
+#             return redirect("profile-page")
+#     else:
+#         form = ProfileUpdateForm(instance=req.user.profile)
+#
+#     context = {
+#         'form': form,
+#         'likes': likes,
+#         'unreadmsgs': unreadMessages
+#     }
+#
+#     return render(req, "users/profile.html", context)
