@@ -343,7 +343,7 @@ EMAIL_PORT = 587
 """
 #=== Зайти в терминал контейнера (в Pycharm) : ===
 b4b9b9017eb3
-docker exec -it 3b8e5ce07c47 /bin/bash
+docker exec -it 28bffef7890d /bin/bash
 """
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}', #чтоб можно было 'сбрость' пароль

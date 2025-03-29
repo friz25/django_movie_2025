@@ -3,7 +3,7 @@
 """
 from rest_framework import serializers
 
-from .models import Movie, Review, Rating, Actor
+from .models import Movie, Review, Rating, Actor, Profile
 #-------*(попытка) Сериализация/Типизия/ДатаКлассы /чтоб pip Typing/Dataclasses--------------
 from typing import Dict, Any
 
@@ -110,3 +110,25 @@ class CreateRatingSerializer(serializers.ModelSerializer):
             defaults={"star": validated_data.get('star')}
         )
         return rating
+
+class ProfileListSelializer(serializers.ModelSerializer):
+    """ Вывод списка профилей юзеров """
+    class Meta:
+        model = Profile
+        fields = ("full_name", "age", "gender")
+
+class ProfileDetailSelializer(serializers.ModelSerializer):
+    """ Вывод полного описания профиля юзера """
+    # user = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    # likeability = LikesSerializer(read_only=True, many=True)
+    # blocked_by = BlocksSerializer(read_only=True, many=True)
+
+    # directors = ActorListSelializer(read_only=True, many=True)
+    # actors = ActorListSelializer(read_only=True, many=True)
+    # genres = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
+    # reviews = ReviewSerializer(many=True)
+
+    class Meta:
+        model = Profile
+        # fields = "__all__"
+        exclude = ("draft",)

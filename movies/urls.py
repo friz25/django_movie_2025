@@ -33,6 +33,19 @@ urlpatterns += format_suffix_patterns([
     path("api/v1/actor/", views.ActorsViewSet.as_view({'get': 'list'})), # [14] http://127.0.0.1:8001/api/v1/actor/
     path("api/v1/actor/<int:pk>", views.ActorsViewSet.as_view({'get': 'retrieve'})), # [14] http://127.0.0.1:8001/api/v1/actor/1
     path("api/v1/actor/<int:pk>", views.ActorsViewSet.as_view({'get': 'retrieve'})), # [14] http://127.0.0.1:8001/api/v1/actor/1
+    #================
+    path("api/v1/profile/", views.ProfileViewSet.as_view({'get': 'list'}, name='profiles_list')), # http://127.0.0.1:8000/api/v1/profile/
+    # path("api/v1/profile/<int:pk>/", views.ProfileViewSet.as_view({'get': 'retrieve', 'delete': 'delete', 'post': 'create'})), # http://127.0.0.1:8000/api/v1/profile/1
+    path("api/v1/profile/<int:pk>/", views.ProfileViewSet.as_view({
+        'get': 'retrieve',
+        'delete': 'destroy',
+        'post': 'create',
+        'put': 'update',
+        'patch': 'partial_update'
+    })), # http://127.0.0.1:8000/api/v1/profile/1
+    # path("api/v1/profile/", views.ProfileViewSet.as_view({'post': 'create'})), # http://127.0.0.1:8001/api/v1/profile/
+    # path("api/v1/profile/<int:pk>/", views.ProfileViewSet.as_view({'delete': 'delete'})), # http://127.0.0.1:8001/api/v1/profile/
+
 ])
 
 

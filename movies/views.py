@@ -173,19 +173,22 @@ class Search(ListView):
 #region === REST PART ==============================
 
 from django.db import models # дописали [6]
-from rest_framework import generics, permissions, viewsets # [9][10][14]
+from rest_framework import generics, permissions, viewsets, status # [9][10][14]
 # from rest_framework.response import Response # удалили [9]
 # from rest_framework.views import APIView # удалили [9]
 from django_filters.rest_framework import DjangoFilterBackend # [10] фильтр
 
-from .models import Movie, Actor
+from .models import Movie, Actor, Profile
 from .serializers import (
     MovieListSerializer,
     MovieDetailSerializer,
     ReviewCreateSerializer,
     CreateRatingSerializer,
     ActorListSelializer,
-    ActorDetailSelializer
+    ActorDetailSelializer,
+
+    ProfileListSelializer,
+    ProfileDetailSelializer,
 )
 from .service import get_client_ip, MovieFilter, PaginationMovies
 from .permisssions import IsSuperUser, IsReviewAuthor #[17] кастомные права доступа
@@ -458,3 +461,81 @@ class S3FileUploadView(APIView):
 #     }
 #
 #     return render(req, "users/profile.html", context)
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    # filter_backends = (DjangoFilterBackend,)  # подключили фильт django
+    # filterset_class = MovieFilter  # http://127.0.0.1:8001/api/v1/movie/?year_min=1983&year_max=2022&genres=Боевик
+    # pagination_class = PaginationMovies
+    # # permission_classes = [permissions.IsAuthenticated] # [10] Добавил
+    # permission_classes = [permissions.AllowAny]  # разрешать любые запросы (CRUD) И любому юзеру
+
+    def get_queryset(self):
+        profiles = Profile.objects.filter(draft=False)
+        return profiles
+
+    # serializer_class = ReviewCreateSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            """ вернуть список всех Профилей """
+            return ProfileListSelializer
+        return ProfileDetailSelializer
+        # elif self.action == 'retrieve':
+        #     """вернуть детальн инфу о конкретн Профиле """
+        #     return ProfileDetailSelializer
+        # elif self.action == 'create':
+        #      """[POST] создать новый профиль / изменить профиль """
+        #      return ProfileDetailSelializer
+        # elif self.action == 'delete':
+        #      """[DELETE] удалить профиль юзера """
+        #      return ProfileDetailSelializer
+
+
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # # Создание нового пользователя
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #
+    # # Получение детальной информации о пользователе
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    #
+    # # Обновление (PUT) — полностью обновляет запись
+    # def update(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #
+    # # Частичное обновление (PATCH) — обновляет только переданные поля
+    # def partial_update(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #
+    # # Удаление пользователя
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
+    #
+    # # Получение списка пользователей
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.get_queryset()
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
