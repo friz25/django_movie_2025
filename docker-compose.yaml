@@ -114,7 +114,8 @@ services:
 #    command: [ "sh", "-c", "cd app && python manage.py migrate && python manage.py runserver 0.0.0.0:8000" ]
     command: ./app/backend_entrypoint.sh # Запуск скрипта (migrate + runserver)
     volumes:
-      - C:\Django\django_movie_2025\django_movie\:/app/
+      C:\Project\backiend\:/app/ # vitalii
+      #- C:\Django\django_movie_2025\django_movie\:/app/ # victor
     ports:
       - "8000:8000"
 #    expose:
